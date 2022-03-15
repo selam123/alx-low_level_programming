@@ -1,18 +1,24 @@
 #include "main.h"
+
 /**
- * main - Print "Holberton" followed by a new line.
- * Description: You are not allowed to include standard libraries.
- * Return: 0
+ * main - check the code for ALX School students.
+ *
+ * Program that prints Holberton, followed by a new line
+ *
+ * Return: always 0 (success)
  */
+
 int main(void)
 {
-int c = 0;
-char holberton[10] = "_putchar\n";
+	char s[] = "_putchar";
+	int i = 0;
 
-while (c < 9)
-{
-_putchar(holberton[c]);
-c++;
-}
-return (0);
+	while (s[i] != '\0')
+	{
+		_putchar(s[i]);
+		i++;
+	}
+	_putchar(10);
+
+	return (0);
 }
