@@ -14,4 +14,4 @@ int wildcmp(char *s1, char *s2);
 int _increment(int y, int n);
 int prime_check(int y, int n);
 
-#endif /* MAIN_H *
+#endif /* MAIN_H */
