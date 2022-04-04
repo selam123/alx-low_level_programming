@@ -1,96 +1,111 @@
 #include <stdlib.h>
-/**
- * is_digit - checks if a string contains a non-digit char
- * @s: string to be evaluated
- *
- * Return: 0 if a non-digit is found, 1 otherwise
- */
-int is_digit(char *s)
-{
-	int i = 0;
 
-	while (s[i])
+/**
+ * _wordCount - counts the number of words in a string
+ * @s: pointer to the string to be counted
+ * @n: the count
+ * Return:  int with number of words
+ */
+int _wordCount(char *s, int n)
+{
+	s = s + 1;
+	while (*s != '\0')
 	{
-		if (s[i] < '0' || s[i] > '9')
-			return (0);
-		i++;
+		if (*(s - 1) == ' ' && *s != ' ')
+			n = n + 1;
+		s = s + 1;
 	}
-	return (1);
+	return (n);
 }
 
 /**
- * _strlen - returns the length of a string
- * @s: string to evaluate
- *
- * Return: the length of the string
+ * _wordStart - finds the position of each new word in a string
+ * @s: a pointer to the string
+ * Return: 0 if the string is empty or the length of the string
+ */
+char *_wordStart(char *s)
+{
+	if (*s == '\0')
+		return (NULL);
+	while (*s == ' ' || (*(s - 1) != ' '))
+		s++;
+	return (s);
+}
+
+/**
+ * _strlen - finds the length of a string
+ * @s: a pointer to the string
+ * Return: 0 if the string is empty or the length of the string
  */
 int _strlen(char *s)
 {
-	int i = 0;
+	if (*s == ' ' || *s == '\0')
+		return (0);
+	return (1 + _strlen(s + 1));
+}
 
-	while (s[i] != '\0')
+/**
+ * _strcpy - copies src onto the end of dest, overwriting the null byte
+ * in dest and adding a new one after copy completion
+ * @dest: the string to be amended
+ * @src: the source string to be copied
+ * Return: a pointer to dest
+ */
+char *_strcpy(char *dest, char *src)
+{
+	int idx = 0;
+
+	while (src[idx] != ' ' && src[idx] != '\0')
 	{
-		i++;
+		dest[idx] = src[idx];
+		idx++;
 	}
-	return (i);
+	dest[idx] = '\0';
+	return (dest);
 }
 
 /**
- * errors - handles errors for main
+ * strtow - splits a string into words as a 2d array
+ * @str: the string to be split
+ * Return: a **ptr to the 2 day array or null if failed
  */
-void errors(void)
+char **strtow(char *str)
 {
-	printf("Error\n");
-	exit(98);
-}
+	char **new;
+	int idx1 = 0, wordLength, numWords = 0;
 
-/**
- * main - multiplies two positive numbers
- * @argc: number of arguments
- * @argv: array of arguments
- *
- * Return: always 0 (Success)
- */
-int main(int argc, char *argv[])
-{
-	char *s1, *s2;
-	int len1, len2, len, i, carry, digit1, digit2, *result, a = 0;
-
-	s1 = argv[1], s2 = argv[2];
-	if (argc != 3 || !is_digit(s1) || !is_digit(s2))
-		errors();
-	len1 = _strlen(s1);
-	len2 = _strlen(s2);
-	len = len1 + len2 + 1;
-	result = malloc(sizeof(int) * len);
-	if (!result)
-		return (1);
-	for (i = 0; i <= len1 + len2; i++)
-		result[i] = 0;
-	for (len1 = len1 - 1; len1 >= 0; len1--)
+	if (str == NULL || *str == '\0')
+		return (NULL);
+	if (*str != ' ')
+		numWords = 1;
+	numWords = _wordCount(str, numWords);
+	new = malloc(sizeof(new) * numWords);
+	if (new == NULL)
 	{
-		digit1 = s1[len1] - '0';
-		carry = 0;
-		for (len2 = _strlen(s2) - 1; len2 >= 0; len2--)
+		free(new);
+		return (NULL);
+	}
+	while (idx1 < numWords)
+	{
+		if (str[0] != ' ')
 		{
-			digit2 = s2[len2] - '0';
-			carry += result[len1 + len2 + 1] + (digit1 * digit2);
-			result[len1 + len2 + 1] = carry % 10;
-			carry /= 10;
+			wordLength = _strlen(str) + 1;
 		}
-		if (carry > 0)
-			result[len1 + len2 + 1] += carry;
+		else
+		{
+			str = _wordStart(str);
+			wordLength = _strlen(str) + 1;
+		}
+		new[idx1] = malloc(sizeof(char) * wordLength);
+		if (new[idx1] == NULL)
+		{
+			free(new[idx1]);
+			return (NULL);
+		}
+		str = _wordStart(str);
+		new[idx1] = _strcpy(new[idx1], str);
+		idx1++;
+		str++;
 	}
-	for (i = 0; i < len - 1; i++)
-	{
-		if (result[i])
-			a = 1;
-		if (a)
-			_putchar(result[i] + '0');
-	}
-	if (!a)
-		_putchar('0');
-	_putchar('\n');
-	free(result);
-	return (0);
+	return (new);
 }
