@@ -23,4 +23,3 @@ size_t print_list(const list_t *h)
 
 	return (1 + print_list(h));
 }
-© 2022 GitHub, Inc.
